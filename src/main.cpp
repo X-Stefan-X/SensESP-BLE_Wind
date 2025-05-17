@@ -17,8 +17,11 @@
 #include "sensesp/signalk/signalk_output.h"
 #include "sensesp/system/lambda_consumer.h"
 #include "sensesp_app_builder.h"
+#include <CalypsoBLE.h>
 
 using namespace sensesp;
+
+
 
 // The setup function performs one-time application initialization.
 void setup() {
@@ -133,6 +136,13 @@ void setup() {
       ->set_sort_order(200);
 
   digital_input2->connect_to(di2_sk_output);
+
+
+
+
+
+
+
 
   // To avoid garbage collecting all shared pointers created in setup(),
   // loop from here.
