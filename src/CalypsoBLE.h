@@ -1,13 +1,17 @@
+#ifndef CALYPSOBLE_H
+#define CALYPSOBLE_H
+
 #include <ArduinoBLE.h>
 //  arduino-libraries/ArduinoBLE @ ^1.4.0
 #include "sensesp.h"
 
 
-namespace SensESP {
+namespace sensesp {
 
 typedef struct Calypso_Data {
     float windSpeed;
     int windDirection;
+    float windAngle;
     int BatteryLevel;
     int Temperature;
     int Humidity;
@@ -23,6 +27,7 @@ typedef struct Calypso_BLE {
     // Calypso Update refresh time millisecond
     const long CALYPSO_DATARATE_REFRESH_TIME = (30*1000);  // 30s
     long Calypso_DataRate_refresh_time = 0;
+   
 
     // WindSpeed...
     // Principal Characteristic:  Notify
@@ -48,21 +53,25 @@ typedef struct Calypso_BLE {
 
 
 class CalypsoBLE {
-private:
-    Calypso_BLE BLECalypso;
-    byte DataRate = 0;
+    private:
+        Calypso_BLE BLECalypso;
+        byte DataRate = 0;
+        void setZeroCalypsoData();
 
-public:
-    Calypso_Data CalypsoData;
-    CalypsoBLE();
 
-    void init();
-    void Connect();
+    public:
+        Calypso_Data CalypsoData;
+        CalypsoBLE();
+        bool Calypso_Enable_Compass = false; // Enable eCompass
 
-    void extractData(const unsigned char data[], int length);
+        void init();
+        void Connect();
 
-    void continuousRead();
+        void extractData(const unsigned char data[], int length);
 
+        void continuousRead();
 
 };
-}
+} // namespace SensESP
+
+#endif
