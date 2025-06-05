@@ -19,6 +19,7 @@ typedef struct Calypso_Data {
     int Roll;
     int Pitch;
     int Compass;
+    long lastUpdateAtMillis = 0; // Last update time in milliseconds
 } Calypso_Data;
 
 typedef struct Calypso_BLE {
@@ -57,7 +58,6 @@ class CalypsoBLE {
         Calypso_BLE BLECalypso;
         byte DataRate = 0;
         void setZeroCalypsoData();
-
 
     public:
         Calypso_Data CalypsoData;

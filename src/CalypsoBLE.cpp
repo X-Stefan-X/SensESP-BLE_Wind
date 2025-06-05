@@ -36,7 +36,7 @@ namespace sensesp {
         CalypsoData.Roll = 0;
         CalypsoData.Pitch = 0;
         CalypsoData.Compass = 0;
-
+        CalypsoData.lastUpdateAtMillis = 0; // Initialize last update time
         DataRate = 0;
     }
     CalypsoBLE::CalypsoBLE() {
@@ -98,6 +98,8 @@ namespace sensesp {
             {
                 CalypsoData.Compass = 0;
             }
+
+        CalypsoData.lastUpdateAtMillis = millis(); // Update last update time
     }
 
     void CalypsoBLE::init() {

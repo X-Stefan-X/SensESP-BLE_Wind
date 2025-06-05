@@ -11,16 +11,28 @@
 #include "sensesp/signalk/signalk_output.h"
 #include "sensesp_app_builder.h"
 
+#include "sensesp/sensors/constant_sensor.h"
+
 #include "CalypsoBLE.h"
 
 using namespace sensesp;
 
 CalypsoBLE* calypso = new CalypsoBLE();
 float read_wind_speed() {
-      return calypso->CalypsoData.windSpeed;
+      if (calypso->CalypsoData.lastUpdateAtMillis <= millis() - 10000) {
+        // If no data has been received in the last second, return 0
+        // If no data has been received yet, return 0
+        return 0.0f;
+      } else {
+        return calypso->CalypsoData.windSpeed;
+      }
     }
 float read_wind_angle() {
-      return calypso->CalypsoData.windAngle;
+      if (calypso->CalypsoData.lastUpdateAtMillis <= millis() - 10000) {
+        return 0.0f;
+      } else {
+        return calypso->CalypsoData.windAngle;
+      }
     }
 float read_battery_level() {
       return calypso->CalypsoData.BatteryLevel;
@@ -97,9 +109,16 @@ void setup() {
     calypso_battery_level->connect_to(
       new SKOutputFloat(sk_battery_level_path, "/Calypso/BatteryLevel/", sk_battery_level_metadata));
 
-//electrical.batteries.99.location
-//electrical.batteries.99.name
+    // Create a constant sensor for the battery name and location
+    auto* battery_constant_sensor = new StringConstantSensor("Calypso Battery", 300000, "/Calypso/BatteryName/");
+    auto battery_constant_sensor_output = new SKOutputString("electrical.batteries.99.name", "", 
+                                                            new SKMetadata("string", "Calypso Battery"));
+    battery_constant_sensor->connect_to(battery_constant_sensor_output);
 
+      auto* battery_location_constant_sensor = new StringConstantSensor("Masttop", 300000, "/Calypso/BatteryLocation/");
+    auto battery_location_constant_sensor_output = new SKOutputString("electrical.batteries.99.location", "", 
+                                                            new SKMetadata("string", "Calypso Battery Location"));
+    battery_location_constant_sensor->connect_to(battery_location_constant_sensor_output);
 
 }
 
